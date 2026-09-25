@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Godot: Play (VS Code)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Godot: Build (VS Code)",
+            "program": "C:\\Users\\jmacagba2025\\Godot\\Editors\\.editor_config\\siteEditor\\Godot_v4.7.2-stable_mono_win64.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "launchSettingsProfile": "",
+            "checkForDevCert": false
+        }
+    ]
+}

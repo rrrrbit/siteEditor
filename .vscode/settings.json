@@ -1,0 +1,10 @@
+{
+    "godotTools.editorPath.godot4": "C:\\Users\\jmacagba2025\\Godot\\Editors\\.editor_config\\siteEditor\\Godot_v4.7.2-stable_win64.exe",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": false,
+    "files.eol": "\n",
+    "files.exclude": {
+        "**/*.gd.uid": true,
+        "**/*.cs.uid": true
+    }
+}
