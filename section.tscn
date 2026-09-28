@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c7vyd0nc5nqh1"]
+
+[ext_resource type="Script" uid="uid://dmcb1fb2avqd5" path="res://wall.gd" id="1_joian"]
+
+[node name="section" type="ColorRect" unique_id=167796547]
+color = Color(0, 0, 0, 0.7529412)
+script = ExtResource("1_joian")

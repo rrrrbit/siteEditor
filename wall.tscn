@@ -2,5 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dmcb1fb2avqd5" path="res://wall.gd" id="1_xxgf6"]
 
-[node name="Wall" type="Panel" unique_id=786118054]
+[node name="wall" type="ColorRect" unique_id=167796547]
+color = Color(0, 0, 0, 0.7529412)
 script = ExtResource("1_xxgf6")
