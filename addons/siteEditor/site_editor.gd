@@ -4,6 +4,7 @@ extends EditorPlugin
 const WALL_CLASS_NAME :String = "wall"
 const WALL_SCENE = preload("res://wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
+const TARGET_SCENE = "res://root.tscn"
 
 var dock :Control
 var dockRoot :SiteEditorDock
@@ -17,6 +18,7 @@ func _disable_plugin() -> void:
 	pass
 
 func _enter_tree() -> void:
+	set_process(true)
 	# Initialization of the plugin goes here.
 	dockRoot = DOCK_SCENE.instantiate()
 	
@@ -38,10 +40,6 @@ func _exit_tree() -> void:
 	remove_dock(dock)
 	dockRoot = null
 	dock.queue_free()
-
-
-func _apply_changes() -> void:
-	if dockRoot.get_node("%UpdateOnSave").button_pressed: _update_html_field()
 
 func _update_html_field():
 	dockRoot.get_node("%html").text = _get_walls_html()
@@ -66,6 +64,12 @@ func _get_walls_html() -> String:
 			'height:'+str(height)+'px;"></div>\n')
 	
 	return output
+
+func _process(delta) -> void:
+	print(Engine.get_frames_per_second())
+	if(EditorInterface.get_edited_scene_root().scene_file_path == TARGET_SCENE):
+		_update_html_field()
+	#if dockRoot.get_node("%UpdateOnSave").button_pressed: _update_html_field() 
 
 func _apply_walls_html(text :String, replace :bool = false):
 	print("INPUT: \n\n", text, "\n")
@@ -97,9 +101,9 @@ func _apply_walls_html(text :String, replace :bool = false):
 						#print(keyvalue[0], " is ", keyvalue[1])
 						var key :String = keyvalue[0]
 						var value_num :float = keyvalue[1].to_lower().rstrip("abcdefghijklmnopqrstuvwxyz").to_float()
-						var value_unit :String = keyvalue[1].lstrip("0123456789").to_lower()
+						var value_unit :String = keyvalue[1].lstrip("0123456789.").to_lower()
 						
-						print(value_unit)
+						#print(value_unit)
 						if value_unit != "px":
 							printerr("WARNING! unit is not px")
 						
