@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://da0rhcrbpp5dw"]
 
+[ext_resource type="PackedScene" uid="uid://brufpbkwk4yix" path="res://wall.tscn" id="1_pyidc"]
+
 [node name="root" type="Control" unique_id=1311082456]
 layout_mode = 3
 anchors_preset = 0
@@ -40,3 +42,43 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="WALL -  (2000, 0)" parent="WALLS" unique_id=167796547 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_left = 2000.0
+offset_right = 2512.0
+offset_bottom = 1900.0
+
+[node name="WALL -  (0, 2000)" parent="WALLS" unique_id=1917596801 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_top = 2000.0
+offset_right = 2512.0
+offset_bottom = 2512.0
+
+[node name="WALL -  (62000, 62000)" parent="WALLS" unique_id=90402169 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_left = 62000.0
+offset_top = 62000.0
+offset_right = 66000.0
+offset_bottom = 62512.0
+
+[node name="WALL -  (62000, 65488)" parent="WALLS" unique_id=1561386086 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_left = 62000.0
+offset_top = 65488.0
+offset_right = 66000.0
+offset_bottom = 66000.0
+
+[node name="@ColorRect@22469" parent="WALLS" unique_id=1279757351 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_left = 62000.0
+offset_top = 62000.0
+offset_right = 62512.0
+offset_bottom = 66000.0
+
+[node name="WALL -  (65488, 62000)" parent="WALLS" unique_id=397664908 instance=ExtResource("1_pyidc")]
+layout_mode = 0
+offset_left = 65488.0
+offset_top = 62000.0
+offset_right = 66000.0
+offset_bottom = 66000.0

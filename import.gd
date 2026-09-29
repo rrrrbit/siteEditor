@@ -81,10 +81,11 @@ func _place_wall(data: WallData):
 	
 	print("placing wall")
 	
-	var this_wall :Control = WALL_SCENE.instantiate()
+	var this_wall :WallObj = WALL_SCENE.instantiate()
 	this_wall.position = Vector2(data.left, data.top)
 	this_wall.size = Vector2(data.width, data.height)
 	this_wall.name = "WALL - " + data.id + " ("+str(data.left)+", "+str(data.top)+")"
+	if data.id != "": this_wall.id = data.id
 	
 	scene_root.get_node("WALLS").add_child(this_wall)
 	this_wall.owner = scene_root
