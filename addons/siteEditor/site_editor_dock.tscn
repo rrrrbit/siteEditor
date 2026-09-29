@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cp4m3601jqsyn" path="res://addons/siteEditor/site_editor_dock.gd" id="1_60w6b"]
 
-[node name="SiteEditorDock" type="Control" unique_id=438100017 node_paths=PackedStringArray("htmlField", "updateOnSaveBox")]
+[node name="SiteEditorDock" type="Control" unique_id=438100017]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,8 +10,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_60w6b")
-htmlField = NodePath("VBoxContainer/HtmlField")
-updateOnSaveBox = NodePath("VBoxContainer/ExportOnSave")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1257977796]
 layout_mode = 1
@@ -21,14 +19,39 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HtmlField" type="CodeEdit" parent="VBoxContainer" unique_id=389841699]
+[node name="html" type="CodeEdit" parent="VBoxContainer" unique_id=389841699]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 placeholder_text = "<div class=\"wall\"..."
 gutters_draw_line_numbers = true
 
-[node name="ExportOnSave" type="CheckBox" parent="VBoxContainer" unique_id=173587177]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1966403980]
+layout_mode = 2
+
+[node name="imp" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=917970854]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 32
+text = "⤓"
+
+[node name="exp" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1900505966]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 32
+text = "↥"
+
+[node name="UpdateOnSave" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=173587177]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Export on save"
+text = "Update on save"
+
+[node name="clear" type="Button" parent="VBoxContainer" unique_id=467229658]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "CLEAR scene"

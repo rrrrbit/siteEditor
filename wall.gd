@@ -1,5 +1,5 @@
 class_name WallObj
-extends ColorRect
+extends Control
 @export var id :String
 
 # Called when the node enters the scene tree for the first time.
