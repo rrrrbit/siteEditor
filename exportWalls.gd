@@ -1,5 +1,6 @@
 @tool
 extends EditorScript
+class_name WorldExportWalls
 
 func _run():
 	var walls = EditorInterface.get_edited_scene_root().get_node("WALLS").get_children()

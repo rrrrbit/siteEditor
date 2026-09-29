@@ -17,3 +17,7 @@ config/icon="res://assets/icon.svg"
 [dotnet]
 
 project/assembly_name="siteEditor"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/siteEditor/plugin.cfg")
