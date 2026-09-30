@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://da0rhcrbpp5dw"]
 
-[ext_resource type="PackedScene" uid="uid://brufpbkwk4yix" path="res://wall.tscn" id="1_pyidc"]
-[ext_resource type="Script" uid="uid://dmcb1fb2avqd5" path="res://wall.gd" id="2_pyidc"]
+[ext_resource type="PackedScene" uid="uid://brufpbkwk4yix" path="res://prefabs/wall.tscn" id="1_3cdn4"]
+[ext_resource type="Script" uid="uid://dmcb1fb2avqd5" path="res://scripts/obj_wall.gd" id="2_y6shu"]
 
 [node name="root" type="Control" unique_id=1311082456]
 layout_mode = 3
@@ -36,6 +36,14 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 0, 0, 0.1882353)
 
+[node name="SECTIONS" type="Control" parent="." unique_id=2025087532]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="WALLS" type="Control" parent="." unique_id=1127376954]
 layout_mode = 1
 anchors_preset = 15
@@ -44,54 +52,54 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WALL -  (2000, 0) to (2512, 1900)" type="ColorRect" parent="WALLS" unique_id=167796547 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (2000, 0) to (2512, 1900)" type="ColorRect" parent="WALLS" unique_id=167796547 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_left = 2000.0
 offset_right = 2512.0
 offset_bottom = 1900.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")
 
-[node name="WALL -  (0, 2000) to (2512, 2512)" type="ColorRect" parent="WALLS" unique_id=1063582722 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (0, 2000) to (2512, 2512)" type="ColorRect" parent="WALLS" unique_id=206202620 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_top = 2000.0
 offset_right = 2512.0
 offset_bottom = 2512.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")
 
-[node name="WALL -  (62000, 62000) to (66000, 62512)" type="ColorRect" parent="WALLS" unique_id=769966240 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (62000, 62000) to (66000, 62512)" type="ColorRect" parent="WALLS" unique_id=1584821657 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_left = 62000.0
 offset_top = 62000.0
 offset_right = 66000.0
 offset_bottom = 62512.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")
 
-[node name="WALL -  (62000, 65488) to (66000, 66000)" type="ColorRect" parent="WALLS" unique_id=672290183 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (62000, 65488) to (66000, 66000)" type="ColorRect" parent="WALLS" unique_id=1895690207 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_left = 62000.0
 offset_top = 65488.0
 offset_right = 66000.0
 offset_bottom = 66000.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")
 
-[node name="WALL -  (62000, 62000) to (62512, 66000)" type="ColorRect" parent="WALLS" unique_id=1252794635 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (62000, 62000) to (62512, 66000)" type="ColorRect" parent="WALLS" unique_id=1732866797 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_left = 62000.0
 offset_top = 62000.0
 offset_right = 62512.0
 offset_bottom = 66000.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")
 
-[node name="WALL -  (65488, 62000) to (66000, 66000)" type="ColorRect" parent="WALLS" unique_id=1346563021 instance=ExtResource("1_pyidc")]
+[node name="WALL -  (65488, 62000) to (66000, 66000)" type="ColorRect" parent="WALLS" unique_id=1864778035 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_left = 65488.0
 offset_top = 62000.0
 offset_right = 66000.0
 offset_bottom = 66000.0
 color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_pyidc")
+script = ExtResource("2_y6shu")

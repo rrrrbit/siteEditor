@@ -2,12 +2,12 @@
 extends EditorPlugin
 
 const WALL_CLASS_NAME :String = "wall"
-const WALL_SCENE = preload("res://wall.tscn")
+const WALL_SCENE = preload("res://prefabs/wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
-const TARGET_SCENE = "res://root.tscn"
+const TARGET_SCENE = "res://scenes/SITE.tscn"
 
 var dock :Control
-var dock_root :SiteEditorDock
+var dock_root :Control
 
 var label_fps :RichTextLabel
 var field_html :CodeEdit
@@ -90,7 +90,7 @@ func _on_clear_press():
 	_clear_walls()
 func _on_html_change():
 	if(auto_mode == AutoModes.IMPORT):
-		_html_to_scene(field_html.text)
+		_html_to_scene(field_html.text, true)
 	
 func _update_html_field():
 	field_html.text = _scene_to_html()
@@ -145,6 +145,8 @@ func _html_to_scene(text :String, replace :bool = false):
 	var reading_in_wall = false
 	var this_wall_data : WallData
 	
+	if replace: _clear_walls()
+	
 	# Loop through the tokens sequentially until reaching the End Of File
 	while parser.read() != ERR_FILE_EOF:
 		var node_type = parser.get_node_type()
@@ -181,13 +183,13 @@ func _html_to_scene(text :String, replace :bool = false):
 				if tag_name != "div": continue
 				if reading_in_wall: 
 					#print("wall end tag")
-					_place_wall(this_wall_data)
+					_place_wall(this_wall_data, replace)
 					reading_in_wall = false
 					
-func _place_wall(data: WallData):
+func _place_wall(data :WallData, replace :bool):
 	var scene_root = EditorInterface.get_edited_scene_root()
 	var wall_name = "WALL - " + data.id + " ("+str(data.left)+", "+str(data.top)+") to ("+str(data.left+data.width)+", "+str(data.top+data.height)+")"
-	if scene_root.get_node("WALLS").has_node(wall_name):
+	if scene_root.get_node("WALLS").has_node(wall_name) && !replace:
 		print("wall already exists")
 		return
 	
