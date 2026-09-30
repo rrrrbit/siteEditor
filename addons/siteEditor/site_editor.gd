@@ -1,7 +1,7 @@
 @tool
 extends EditorPlugin
 
-const WALL_CLASS_NAME :String = "wall"
+const WALL_TAG_NAME :String = "wall-"
 const WALL_SCENE = preload("res://prefabs/wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
 const TARGET_SCENE = "res://scenes/SITE.tscn"
@@ -107,12 +107,12 @@ func _scene_to_html() -> String:
 		var height = wall.size.y
 		var id = wall.id
 		
-		output += ('<div class="wall" ' + 
-			('' if id == '' else 'id="'+id+'" ') + 'style="' + 
+		output += ('<'+WALL_TAG_NAME + 
+			(' ' if id == '' else ' id="'+id+'" ') + 'style="' + 
 			'top:'+str(top)+'px; ' + 
 			'left:'+str(left)+'px; ' + 
 			'width:'+str(width)+'px; ' + 
-			'height:'+str(height)+'px;"></div>\n')
+			'height:'+str(height)+'px;"></wall->\n')
 	
 	return output
 
@@ -149,12 +149,10 @@ func _html_to_scene(text :String, replace :bool = false):
 	
 	# Loop through the tokens sequentially until reaching the End Of File
 	while parser.read() != ERR_FILE_EOF:
-		var node_type = parser.get_node_type()
-		
-		match node_type:
+		match parser.get_node_type():
 			XMLParser.NODE_ELEMENT:
 				var tag_name = parser.get_node_name()
-				if parser.get_named_attribute_value_safe("class") != WALL_CLASS_NAME : continue
+				if tag_name != WALL_TAG_NAME : continue
 				#print("wall")
 				reading_in_wall = true
 				this_wall_data = WallData.new()
@@ -169,8 +167,7 @@ func _html_to_scene(text :String, replace :bool = false):
 						var value_unit :String = keyvalue[1].lstrip("0123456789.").to_lower()
 						
 						#print(value_unit)
-						if value_unit != "px":
-							printerr("WARNING! unit is not px")
+						if value_unit != "px": printerr("WARNING! unit is not px")
 						
 						match key:
 							"left": this_wall_data.left = value_num
@@ -180,11 +177,10 @@ func _html_to_scene(text :String, replace :bool = false):
 					
 			XMLParser.NODE_ELEMENT_END:
 				var tag_name = parser.get_node_name()
-				if tag_name != "div": continue
-				if reading_in_wall: 
-					#print("wall end tag")
-					_place_wall(this_wall_data, replace)
-					reading_in_wall = false
+				if tag_name != WALL_TAG_NAME || !reading_in_wall: continue
+				#print("wall end tag")
+				_place_wall(this_wall_data, replace)
+				reading_in_wall = false
 					
 func _place_wall(data :WallData, replace :bool):
 	var scene_root = EditorInterface.get_edited_scene_root()
@@ -206,4 +202,4 @@ func _place_wall(data :WallData, replace :bool):
 
 func _clear_walls():
 	for wall in EditorInterface.get_edited_scene_root().get_node("WALLS").get_children():
-			wall.queue_free()
+		wall.queue_free()
