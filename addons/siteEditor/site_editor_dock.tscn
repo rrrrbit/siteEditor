@@ -19,6 +19,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="fps" type="RichTextLabel" parent="VBoxContainer" unique_id=285168746]
+unique_name_in_owner = true
+layout_mode = 2
+text = "fps: 60.0"
+fit_content = true
+
 [node name="html" type="CodeEdit" parent="VBoxContainer" unique_id=389841699]
 unique_name_in_owner = true
 layout_mode = 2
@@ -37,6 +43,15 @@ size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 32
 text = "⤓"
 
+[node name="clr" type="ColorRect" parent="VBoxContainer/HBoxContainer/imp" unique_id=1972065801]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="exp" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1900505966]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 0)
@@ -45,13 +60,30 @@ size_flags_horizontal = 0
 theme_override_font_sizes/font_size = 32
 text = "↥"
 
-[node name="UpdateOnSave" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=173587177]
+[node name="clr" type="ColorRect" parent="VBoxContainer/HBoxContainer/exp" unique_id=1592870616]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="auto" type="CheckBox" parent="VBoxContainer/HBoxContainer" unique_id=173587177]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Update on save"
+text = "Auto"
 
-[node name="clear" type="Button" parent="VBoxContainer" unique_id=467229658]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=2100916651]
+layout_mode = 2
+
+[node name="clear" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=467229658]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 text = "CLEAR scene"
+
+[node name="autoClear" type="CheckBox" parent="VBoxContainer/HBoxContainer2" unique_id=479234618]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Clear on export"

@@ -7,7 +7,23 @@ const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
 const TARGET_SCENE = "res://root.tscn"
 
 var dock :Control
-var dockRoot :SiteEditorDock
+var dock_root :SiteEditorDock
+
+var label_fps :RichTextLabel
+var field_html :CodeEdit
+var btn_import :Button
+var btn_export :Button
+var check_auto :CheckBox
+var btn_clear :Button
+
+
+enum AutoModes {
+	OFF,
+	UNSET,
+	IMPORT,
+	EXPORT
+}
+var auto_mode :AutoModes
 
 func _enable_plugin() -> void:
 	# Add autoloads here.
@@ -17,34 +33,69 @@ func _disable_plugin() -> void:
 	# Remove autoloads here.
 	pass
 
+func dock_get(s): return dock_root.get_node(s)
+
 func _enter_tree() -> void:
 	set_process(true)
 	# Initialization of the plugin goes here.
-	dockRoot = DOCK_SCENE.instantiate()
+	dock_root = DOCK_SCENE.instantiate()
 	
 	dock = EditorDock.new()
 	dock.title = "Layout Tool"
 	dock.default_slot = DOCK_SLOT_LEFT_UL
 	dock.available_layouts = EditorDock.DOCK_LAYOUT_VERTICAL | EditorDock.DOCK_LAYOUT_FLOATING
-	dock.add_child(dockRoot)
+	dock.add_child(dock_root)
 	
-	dockRoot.get_node("%imp").pressed.connect(func(): _apply_walls_html(dockRoot.get_node("%html").text))
-	dockRoot.get_node("%exp").pressed.connect(_update_html_field)
-	dockRoot.get_node("%clear").pressed.connect(_clear_walls)
+	label_fps = dock_get("%fps")
+	field_html = dock_get("%html")
+	btn_import = dock_get("%imp")
+	btn_export = dock_get("%exp")
+	check_auto = dock_get("%auto")
+	btn_clear = dock_get("%clear")
 	
+	btn_import.pressed.connect(_on_import_press)
+	btn_export.pressed.connect(_on_export_press)
+	btn_clear.pressed.connect(_on_clear_press)
+	check_auto.button_up.connect(func(): 
+		if check_auto.button_pressed:
+			auto_mode = AutoModes.UNSET
+		else:
+			auto_mode = AutoModes.OFF
+		)
+	field_html.text_changed.connect(_on_html_change)
+	
+	
+	auto_mode = AutoModes.OFF
 	
 	add_dock(dock)
 	_update_html_field()
 
+
 func _exit_tree() -> void:
 	remove_dock(dock)
-	dockRoot = null
+	dock_root = null
 	dock.queue_free()
 
+func _on_import_press():
+	match auto_mode:
+		AutoModes.OFF: _html_to_scene(field_html.text)
+		AutoModes.UNSET: auto_mode = AutoModes.IMPORT
+		AutoModes.EXPORT: auto_mode = AutoModes.IMPORT
+func _on_export_press():
+	match auto_mode:
+		AutoModes.OFF: _update_html_field()
+		AutoModes.UNSET: auto_mode = AutoModes.EXPORT
+		AutoModes.IMPORT: auto_mode = AutoModes.EXPORT
+func _on_clear_press():
+	_clear_walls()
+func _on_html_change():
+	if(auto_mode == AutoModes.IMPORT):
+		_html_to_scene(field_html.text)
+	
 func _update_html_field():
-	dockRoot.get_node("%html").text = _get_walls_html()
+	field_html.text = _scene_to_html()
 
-func _get_walls_html() -> String:
+func _scene_to_html() -> String:
 	var walls = EditorInterface.get_edited_scene_root().get_node("WALLS").get_children()
 	var output = ""
 	
@@ -66,12 +117,24 @@ func _get_walls_html() -> String:
 	return output
 
 func _process(delta) -> void:
-	print(Engine.get_frames_per_second())
-	if(EditorInterface.get_edited_scene_root().scene_file_path == TARGET_SCENE):
-		_update_html_field()
-	#if dockRoot.get_node("%UpdateOnSave").button_pressed: _update_html_field() 
+	label_fps.text = "fps: "+str(Engine.get_frames_per_second())
+	
+	btn_export.get_node("clr").color = Color(0,0,0,0)
+	btn_import.get_node("clr").color = Color(0,0,0,0)
+	
+	match auto_mode:
+		AutoModes.OFF:
+			pass
+		AutoModes.UNSET:
+			pass
+		AutoModes.IMPORT:
+			btn_import.get_node("clr").color = Color(0, 1, 0, 0.1)
+		AutoModes.EXPORT:
+			btn_export.get_node("clr").color = Color(0, 1, 0, 0.1)
+			if(EditorInterface.get_edited_scene_root().scene_file_path == TARGET_SCENE):
+				_update_html_field()
 
-func _apply_walls_html(text :String, replace :bool = false):
+func _html_to_scene(text :String, replace :bool = false):
 	print("INPUT: \n\n", text, "\n")
 	var parser := XMLParser.new()
 	
