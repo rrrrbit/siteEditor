@@ -2,6 +2,7 @@
 extends EditorPlugin
 
 const WALL_TAG_NAME :String = "wall-"
+const SECTION_TAG_NAME :String = "section"
 const WALL_SCENE = preload("res://prefabs/wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
 const TARGET_SCENE = "res://scenes/SITE.tscn"
@@ -21,7 +22,6 @@ var btn_export :Button
 var check_auto :CheckBox
 var btn_clear :Button
 
-
 enum AutoModes {
 	OFF,
 	UNSET,
@@ -30,15 +30,17 @@ enum AutoModes {
 }
 var auto_mode :AutoModes
 
-func _enable_plugin() -> void:
-	# Add autoloads here.
-	pass
 
-func _disable_plugin() -> void:
-	# Remove autoloads here.
-	pass
 
-func dock_get(s): return dock_root.get_node(s)
+
+
+
+
+
+
+
+
+
 
 func _enter_tree() -> void:
 	set_process(true)
@@ -69,17 +71,42 @@ func _enter_tree() -> void:
 		)
 	field_html.text_changed.connect(_on_html_change)
 	
-	
 	auto_mode = AutoModes.OFF
 	
 	add_dock(dock)
 	_update_html_field()
 
-
 func _exit_tree() -> void:
 	remove_dock(dock)
 	dock_root = null
 	dock.queue_free()
+	
+func _process(delta) -> void:
+	label_fps.text = "fps: "+str(Engine.get_frames_per_second())
+	
+	btn_export.get_node("clr").color = Color(0,0,0,0)
+	btn_import.get_node("clr").color = Color(0,0,0,0)
+	
+	match auto_mode:
+		AutoModes.OFF:
+			pass
+		AutoModes.UNSET:
+			pass
+		AutoModes.IMPORT:
+			btn_import.get_node("clr").color = Color(0, 1, 0, 0.1)
+		AutoModes.EXPORT:
+			btn_export.get_node("clr").color = Color(0, 1, 0, 0.1)
+			if(get_scene().scene_file_path == TARGET_SCENE):
+				_update_html_field()
+				
+				
+				
+				
+				
+				
+				
+				
+				
 
 func _on_import_press():
 	match auto_mode:
@@ -100,71 +127,78 @@ func _on_html_change():
 func _update_html_field():
 	field_html.text = _scene_to_html()
 
+
+
+
+
+func dock_get(s): return dock_root.get_node(s)
+func get_scene(): return EditorInterface.get_edited_scene_root()
+	
+
+
+
+
+
+func _indented(str: String) -> String: return ("\t"+str.replace("\n","\n\t"))
+
+func _obj_to_html(obj : WrldRect, anchor_left= true, anchor_top = true) -> String:
+	const format = '<{tag_name} {id} style="{x_anchor}:{x}px; {y_anchor}:{y}px; width:{width}px; height:{height}px;">{inner}</{tag_name}>'
+	var x = obj.position.x if anchor_left else obj.get_parent_control().size.x - obj.get_end().x 
+	var y = obj.position.y if anchor_left else obj.get_parent_control().size.y - obj.get_end().y 
+	return format.format({
+		"tag_name": WALL_TAG_NAME if obj.collision else SECTION_TAG_NAME,
+		"id": ("id: "+obj.id) if obj.id != "" else "",
+		"x_anchor": "left" if anchor_left else "right",
+		"x": x,
+		"y_anchor": "top" if anchor_top else "bottom",
+		"y": y,
+		"width": obj.size.x,
+		"height": obj.size.y,
+		"inner": "\n"+_indented(obj.inner)+"\n" if obj.inner != "" else "",
+		})
+
+func _section_to_html(section_node :Control, anchor_top :bool, anchor_left :bool):
+	var output = '<div id ='+section_node.name+'>\n'
+	var children = section_node.get_children()
+	if children.size() == 0: return ""
+	for child :WrldRect in children:
+		output += _indented(_obj_to_html(child, anchor_top, anchor_left))
+	output += '\n</div>\n'
+	return output
+
 func _scene_to_html() -> String:
-	var walls = EditorInterface.get_edited_scene_root().get_node("WALLS").get_children()
+	var walls = get_scene().get_node("WALLS").get_children()
 	
-	var stuff_nw = EditorInterface.get_edited_scene_root().get_node(NW).get_children()
-	var stuff_ne = EditorInterface.get_edited_scene_root().get_node(NE).get_children()
-	var stuff_sw = EditorInterface.get_edited_scene_root().get_node(SW).get_children()
-	var stuff_se = EditorInterface.get_edited_scene_root().get_node(SE).get_children()
+	var things_nw = get_scene().get_node(NW).get_children()
+	var things_ne = get_scene().get_node(NE).get_children()
+	var things_sw = get_scene().get_node(SW).get_children()
+	var things_se = get_scene().get_node(SE).get_children()
 	
-	var output = ""
-	
-	if stuff_nw.size() != 0:
-		output += '<div id = "NW">\n'
-		for thing :Control in stuff_nw:
-			if true:
-				
-				var width = thing.size.x
-				var height = thing.size.y
-				var top = thing.position.y
-				var bottom = thing.position.y + height
-				var left = thing.position.x
-				var right = thing.position.x + width
-				var id = thing.id
-				output += ('<'+WALL_TAG_NAME + 
-				(' ' if id == '' else ' id="'+id+'" ') + 'style="' + 
-				'top:'+str(top)+'px; ' + 
-				'left:'+str(left)+'px; ' + 
-				'width:'+str(width)+'px; ' + 
-				'height:'+str(height)+'px;"></wall->\n')
-		output += '</div>'
-	
-	
-	for wall in walls:
-		# model: <div class="wall" style="left: 2000px; top: 0px; width:512px; height:1900px;"></div>
-		var top = wall.position.y
-		var left = wall.position.x
-		var width = wall.size.x
-		var height = wall.size.y
-		var id = wall.id
-		
-		output += ('<'+WALL_TAG_NAME + 
-			(' ' if id == '' else ' id="'+id+'" ') + 'style="' + 
-			'top:'+str(top)+'px; ' + 
-			'left:'+str(left)+'px; ' + 
-			'width:'+str(width)+'px; ' + 
-			'height:'+str(height)+'px;"></wall->\n')
+	var output :String = (
+		_section_to_html(get_scene().get_node(NW), false, false) +
+		_section_to_html(get_scene().get_node(NE), false, true) +
+		_section_to_html(get_scene().get_node(SW), true, false) +
+		_section_to_html(get_scene().get_node(SE), true, true)
+	)
 	
 	return output
 
-func _process(delta) -> void:
-	label_fps.text = "fps: "+str(Engine.get_frames_per_second())
-	
-	btn_export.get_node("clr").color = Color(0,0,0,0)
-	btn_import.get_node("clr").color = Color(0,0,0,0)
-	
-	match auto_mode:
-		AutoModes.OFF:
-			pass
-		AutoModes.UNSET:
-			pass
-		AutoModes.IMPORT:
-			btn_import.get_node("clr").color = Color(0, 1, 0, 0.1)
-		AutoModes.EXPORT:
-			btn_export.get_node("clr").color = Color(0, 1, 0, 0.1)
-			if(EditorInterface.get_edited_scene_root().scene_file_path == TARGET_SCENE):
-				_update_html_field()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 func _html_to_scene(text :String, replace :bool = false):
 	print("INPUT: \n\n", text, "\n")
@@ -215,7 +249,7 @@ func _html_to_scene(text :String, replace :bool = false):
 				reading_in_wall = false
 					
 func _place_wall(data :WallData, replace :bool):
-	var scene_root = EditorInterface.get_edited_scene_root()
+	var scene_root = get_scene()
 	var wall_name = "WALL - " + data.id + " ("+str(data.left)+", "+str(data.top)+") to ("+str(data.left+data.width)+", "+str(data.top+data.height)+")"
 	if scene_root.get_node("WALLS").has_node(wall_name) && !replace:
 		print("wall already exists")
@@ -233,5 +267,5 @@ func _place_wall(data :WallData, replace :bool):
 	this_wall.owner = scene_root
 
 func _clear_walls():
-	for wall in EditorInterface.get_edited_scene_root().get_node("WALLS").get_children():
+	for wall in get_scene().get_node("WALLS").get_children():
 		wall.queue_free()
