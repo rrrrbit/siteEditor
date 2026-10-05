@@ -6,6 +6,11 @@ const WALL_SCENE = preload("res://prefabs/wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
 const TARGET_SCENE = "res://scenes/SITE.tscn"
 
+const NW :String = "%NW"
+const NE :String = "%NE"
+const SW :String = "%SW"
+const SE :String = "%SE"
+
 var dock :Control
 var dock_root :Control
 
@@ -97,7 +102,34 @@ func _update_html_field():
 
 func _scene_to_html() -> String:
 	var walls = EditorInterface.get_edited_scene_root().get_node("WALLS").get_children()
+	
+	var stuff_nw = EditorInterface.get_edited_scene_root().get_node(NW).get_children()
+	var stuff_ne = EditorInterface.get_edited_scene_root().get_node(NE).get_children()
+	var stuff_sw = EditorInterface.get_edited_scene_root().get_node(SW).get_children()
+	var stuff_se = EditorInterface.get_edited_scene_root().get_node(SE).get_children()
+	
 	var output = ""
+	
+	if stuff_nw.size() != 0:
+		output += '<div id = "NW">\n'
+		for thing :Control in stuff_nw:
+			if true:
+				
+				var width = thing.size.x
+				var height = thing.size.y
+				var top = thing.position.y
+				var bottom = thing.position.y + height
+				var left = thing.position.x
+				var right = thing.position.x + width
+				var id = thing.id
+				output += ('<'+WALL_TAG_NAME + 
+				(' ' if id == '' else ' id="'+id+'" ') + 'style="' + 
+				'top:'+str(top)+'px; ' + 
+				'left:'+str(left)+'px; ' + 
+				'width:'+str(width)+'px; ' + 
+				'height:'+str(height)+'px;"></wall->\n')
+		output += '</div>'
+	
 	
 	for wall in walls:
 		# model: <div class="wall" style="left: 2000px; top: 0px; width:512px; height:1900px;"></div>
