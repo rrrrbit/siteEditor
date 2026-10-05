@@ -63,6 +63,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="WALL -  (2000, 0) to (2512, 1900)2" parent="GridContainer/north/NE" unique_id=167796547 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -642.0
+offset_right = 1337.0
+grow_vertical = 0
+pivot_offset_ratio = Vector2(1, 0)
+script = ExtResource("2_3cdn4")
+collision = false
+id = "hi"
+inner = ""
+
 [node name="middle" type="HBoxContainer" parent="GridContainer" unique_id=773490147]
 layout_mode = 2
 
@@ -102,14 +116,15 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -1341.0
-offset_right = -4.0
+offset_left = -1337.0
 offset_bottom = 642.0
 grow_horizontal = 0
 pivot_offset_ratio = Vector2(1, 0)
 script = ExtResource("2_3cdn4")
 collision = true
-inner = "hi"
+id = "hi"
+inner = "hi
+meoowwwww"
 
 [node name="S" type="Control" parent="GridContainer/south" unique_id=1352511384]
 unique_name_in_owner = true

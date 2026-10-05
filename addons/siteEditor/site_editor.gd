@@ -139,15 +139,16 @@ func get_scene(): return EditorInterface.get_edited_scene_root()
 
 
 
-func _indented(str: String) -> String: return ("\t"+str.replace("\n","\n\t"))
+func _indented(str: String) -> String: return ("    "+str.replace("\n","\n    "))
 
-func _obj_to_html(obj : WrldRect, anchor_left= true, anchor_top = true) -> String:
-	const format = '<{tag_name} {id} style="{x_anchor}:{x}px; {y_anchor}:{y}px; width:{width}px; height:{height}px;">{inner}</{tag_name}>'
-	var x = obj.position.x if anchor_left else obj.get_parent_control().size.x - obj.get_end().x 
-	var y = obj.position.y if anchor_left else obj.get_parent_control().size.y - obj.get_end().y 
+func _obj_to_html(obj : WrldRect, anchor_top, anchor_left) -> String:
+	const format = '<{tag_name}{id} style="{x_anchor}:{x}px; {y_anchor}:{y}px; width:{width}px; height:{height}px;">{inner}</{tag_name}>'
+	
+	var x = obj.get_begin().x if anchor_left else -obj.get_end().x 
+	var y = obj.get_begin().y if anchor_top else -obj.get_end().y 
 	return format.format({
 		"tag_name": WALL_TAG_NAME if obj.collision else SECTION_TAG_NAME,
-		"id": ("id: "+obj.id) if obj.id != "" else "",
+		"id": (' id="'+obj.id+'"') if obj.id != "" else "",
 		"x_anchor": "left" if anchor_left else "right",
 		"x": x,
 		"y_anchor": "top" if anchor_top else "bottom",
@@ -158,7 +159,7 @@ func _obj_to_html(obj : WrldRect, anchor_left= true, anchor_top = true) -> Strin
 		})
 
 func _section_to_html(section_node :Control, anchor_top :bool, anchor_left :bool):
-	var output = '<div id ='+section_node.name+'>\n'
+	var output = '<div id="'+section_node.name+'">\n'
 	var children = section_node.get_children()
 	if children.size() == 0: return ""
 	for child :WrldRect in children:
@@ -167,13 +168,6 @@ func _section_to_html(section_node :Control, anchor_top :bool, anchor_left :bool
 	return output
 
 func _scene_to_html() -> String:
-	var walls = get_scene().get_node("WALLS").get_children()
-	
-	var things_nw = get_scene().get_node(NW).get_children()
-	var things_ne = get_scene().get_node(NE).get_children()
-	var things_sw = get_scene().get_node(SW).get_children()
-	var things_se = get_scene().get_node(SE).get_children()
-	
 	var output :String = (
 		_section_to_html(get_scene().get_node(NW), false, false) +
 		_section_to_html(get_scene().get_node(NE), false, true) +
