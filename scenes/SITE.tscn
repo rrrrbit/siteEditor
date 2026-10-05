@@ -50,6 +50,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="hi" type="ColorRect" parent="GridContainer/north/NW" unique_id=167796547 instance=ExtResource("1_3cdn4")]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+color = Color(0, 0, 0, 0.7529412)
+script = ExtResource("2_3cdn4")
+collision = true
+id = "hi"
+
 [node name="N" type="Control" parent="GridContainer/north" unique_id=726190369]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1920, 0)
@@ -63,18 +76,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="(0, -100)" type="ColorRect" parent="GridContainer/north/NE" unique_id=167796547 instance=ExtResource("1_3cdn4")]
-layout_mode = 1
-anchors_preset = -1
+[node name="hi" type="ColorRect" parent="GridContainer/north/NE" unique_id=1227556315 instance=ExtResource("1_3cdn4")]
+layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -100.0
 offset_right = 100.0
-grow_vertical = 0
 color = Color(0, 0, 0, 0.7529412)
 script = ExtResource("2_3cdn4")
-inner = "		test"
-metadata/_edit_layout_mode_ = 1
+id = "hi"
 
 [node name="middle" type="HBoxContainer" parent="GridContainer" unique_id=773490147]
 layout_mode = 2
@@ -110,17 +120,16 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="hi" type="ColorRect" parent="GridContainer/south/SW" unique_id=1433608038 instance=ExtResource("1_3cdn4")]
+[node name="hi" type="ColorRect" parent="GridContainer/south/SW" unique_id=87984278 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
-offset_right = 100.0
+offset_left = -100.0
 offset_bottom = 100.0
 color = Color(0, 0, 0, 0.7529412)
 script = ExtResource("2_3cdn4")
 collision = true
 id = "hi"
-metadata/_edit_layout_mode_ = 1
 
 [node name="S" type="Control" parent="GridContainer/south" unique_id=1352511384]
 unique_name_in_owner = true
@@ -134,3 +143,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="hi" type="ColorRect" parent="GridContainer/south/SE" unique_id=1132360549 instance=ExtResource("1_3cdn4")]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(0, 0, 0, 0.7529412)
+script = ExtResource("2_3cdn4")
+collision = true
+id = "hi"

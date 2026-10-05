@@ -273,51 +273,26 @@ func _place_wrld_rect(parent :Control, data :WrldRectDat, replace :bool):
 	var wrld_rect_name = ("("+str(data.x)+", "+str(data.y)+")") if data.id == "" else data.id
 	var this_wrld_rect :WrldRect = WRLD_RECT_SCENE.instantiate()
 	
-	print(data.anchor_top)
-	print(data.anchor_left)
 	match [data.anchor_top, data.anchor_left]:
-		[false, false]:
-			print("bottom right")
-			
-			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
-		[false, true]:
-			print("bottom left")
-			
-			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
-		[true, false]:
-			print("top right")
-			
-			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
-		[true, true]:
-			print("top left")
-			
-			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+		[false, false]: this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+		[false, true]: this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+		[true, false]: this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+		[true, true]: this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
 	
 	if data.anchor_left:
-		this_wrld_rect.set_anchor(SIDE_LEFT, 0)
-		this_wrld_rect.set_anchor(SIDE_RIGHT, 0)
-		this_wrld_rect.set_offset(SIDE_LEFT, data.x)
-		this_wrld_rect.set_offset(SIDE_RIGHT, data.x + data.width)
-		#this_wrld_rect.get_rect().end.x = data.x + data.width
+		this_wrld_rect.set_anchor_and_offset(SIDE_LEFT, 0, data.x)
+		this_wrld_rect.set_anchor_and_offset(SIDE_RIGHT, 0, data.x + data.width)
 	else:
-		this_wrld_rect.set_anchor(SIDE_LEFT, 1)
-		this_wrld_rect.set_anchor(SIDE_RIGHT, 1)
-		this_wrld_rect.set_offset(SIDE_LEFT, -data.x)
-		this_wrld_rect.set_offset(SIDE_RIGHT, -data.x - data.width)
-		#this_wrld_rect.get_rect().end.x = data.x + data.width
+		this_wrld_rect.set_anchor_and_offset(SIDE_LEFT, 1, -data.x-data.width)
+		this_wrld_rect.set_anchor_and_offset(SIDE_RIGHT, 1, -data.x)
 	
 	if data.anchor_top:
-		this_wrld_rect.set_anchor(SIDE_TOP, 0)
-		this_wrld_rect.set_anchor(SIDE_BOTTOM, 0)
-		this_wrld_rect.set_offset(SIDE_TOP, data.x)
-		this_wrld_rect.set_offset(SIDE_RIGHT, data.y + data.height)
+		this_wrld_rect.set_anchor_and_offset(SIDE_TOP, 0, data.y)
+		this_wrld_rect.set_anchor_and_offset(SIDE_BOTTOM, 0, data.y + data.height)
 	else:
-		this_wrld_rect.set_anchor(SIDE_TOP, 0)
-		this_wrld_rect.set_anchor(SIDE_BOTTOM, 0)
-		this_wrld_rect.set_offset(SIDE_TOP, data.x)
-		this_wrld_rect.set_offset(SIDE_BOTTOM, data.y + data.height)
+		this_wrld_rect.set_anchor_and_offset(SIDE_TOP, 1, -data.y-data.height)
+		this_wrld_rect.set_anchor_and_offset(SIDE_BOTTOM, 1, -data.y)
 	
-	#this_wrld_rect.size = Vector2(data.width, data.height)
 	this_wrld_rect.name = wrld_rect_name
 	
 	this_wrld_rect.id = data.id
