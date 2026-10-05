@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://brufpbkwk4yix"]
 
-[ext_resource type="Script" uid="uid://dmcb1fb2avqd5" path="res://scripts/obj_wall.gd" id="1_3uv27"]
+[ext_resource type="Script" uid="uid://cx1a111c6n7fy" path="res://scripts/node_wrld_rect.gd" id="1_3uv27"]
 
-[node name="wall" type="ColorRect" unique_id=167796547]
+[node name="wrldRect" type="ColorRect" unique_id=167796547]
 color = Color(0, 0, 0, 0.7529412)
 script = ExtResource("1_3uv27")

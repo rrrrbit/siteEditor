@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bbhq1dreucung"]
+
+[ext_resource type="Script" uid="uid://cx1a111c6n7fy" path="res://scripts/node_wrld_rect.gd" id="1_8yiih"]
+
+[node name="wrld_rect" type="ColorRect" unique_id=167796547]
+color = Color(0, 0, 0, 0.7529412)
+script = ExtResource("1_8yiih")

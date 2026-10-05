@@ -3,6 +3,7 @@ extends EditorPlugin
 
 const WALL_TAG_NAME :String = "wall-"
 const SECTION_TAG_NAME :String = "section"
+const WRLD_RECT_SCENE = preload("res://prefabs/wrld_rect.tscn")
 const WALL_SCENE = preload("res://prefabs/wall.tscn")
 const DOCK_SCENE = preload("res://addons/siteEditor/site_editor_dock.tscn")
 const TARGET_SCENE = "res://scenes/SITE.tscn"
@@ -11,6 +12,7 @@ const NW :String = "%NW"
 const NE :String = "%NE"
 const SW :String = "%SW"
 const SE :String = "%SE"
+enum Sections { NW, NE, SW, SE, NULL }
 
 var dock :Control
 var dock_root :Control
@@ -161,7 +163,6 @@ func _obj_to_html(obj : WrldRect, anchor_top, anchor_left) -> String:
 func _section_to_html(section_node :Control, anchor_top :bool, anchor_left :bool):
 	var output = '<div id="'+section_node.name+'">\n'
 	var children = section_node.get_children()
-	if children.size() == 0: return ""
 	for child :WrldRect in children:
 		output += _indented(_obj_to_html(child, anchor_top, anchor_left))
 	output += '\n</div>\n'
@@ -198,68 +199,140 @@ func _html_to_scene(text :String, replace :bool = false):
 	print("INPUT: \n\n", text, "\n")
 	var parser := XMLParser.new()
 	
-	if parser.open_buffer(text.to_utf8_buffer()) != OK:
+	var bytes = text.to_utf8_buffer()
+	
+	if parser.open_buffer(bytes) != OK:
 		print("Failed to open HTML buffer")
 		return
 	
-	var reading_in_wall = false
-	var this_wall_data : WallData
+	var current_parent: Control = get_scene()
+	
+	var reading_in_wrld_rect = false
+	var this_wrld_rect_data : WrldRectDat
+	var this_wrld_rect_inner_start : int
+	var this_wrld_rect_inner_end : int
+	
+	var prev_node_opened_wrld_rect = false
 	
 	if replace: _clear_walls()
-	
-	# Loop through the tokens sequentially until reaching the End Of File
-	while parser.read() != ERR_FILE_EOF:
+	while parser.read() != ERR_FILE_EOF: 
+		if prev_node_opened_wrld_rect:
+			this_wrld_rect_inner_start = parser.get_node_offset()
+			prev_node_opened_wrld_rect = false
 		match parser.get_node_type():
 			XMLParser.NODE_ELEMENT:
 				var tag_name = parser.get_node_name()
-				if tag_name != WALL_TAG_NAME : continue
-				#print("wall")
-				reading_in_wall = true
-				this_wall_data = WallData.new()
-				if parser.has_attribute("id"):
-					this_wall_data.id = parser.get_named_attribute_value_safe("id")
-				if parser.has_attribute("style"):
-					for style in parser.get_named_attribute_value("style").replacen(" ","").split(";", false):
-						var keyvalue = style.split(":")
-						#print(keyvalue[0], " is ", keyvalue[1])
-						var key :String = keyvalue[0]
-						var value_num :float = keyvalue[1].to_lower().rstrip("abcdefghijklmnopqrstuvwxyz").to_float()
-						var value_unit :String = keyvalue[1].lstrip("0123456789.").to_lower()
-						
-						#print(value_unit)
-						if value_unit != "px": printerr("WARNING! unit is not px")
-						
-						match key:
-							"left": this_wall_data.left = value_num
-							"top": this_wall_data.top = value_num
-							"width": this_wall_data.width = value_num
-							"height": this_wall_data.height = value_num
+				var tag_id = parser.get_named_attribute_value_safe("id")
+				var tag_style = parser.get_named_attribute_value_safe("style")
+				match tag_name:
+					"div": match tag_id:
+						"NW":current_parent = get_scene().get_node(NW)
+						"NE":current_parent = get_scene().get_node(NE)
+						"SW":current_parent = get_scene().get_node(SW)
+						"SE":current_parent = get_scene().get_node(SE)
+					WALL_TAG_NAME, SECTION_TAG_NAME: reading_in_wrld_rect = true
+				if !reading_in_wrld_rect: continue
+				prev_node_opened_wrld_rect = true
+				this_wrld_rect_inner_start = parser.get_node_offset()
+				this_wrld_rect_data = WrldRectDat.new()
+				this_wrld_rect_data.id = tag_id
+				this_wrld_rect_data.collision = tag_name == "wall-"
+				for style in tag_style.replacen(" ","").split(";", false):
+					var keyvalue = style.split(":")
+					var key :String = keyvalue[0]
+					var value_num :float = keyvalue[1].to_lower().rstrip("abcdefghijklmnopqrstuvwxyz").to_float()
+					var value_unit :String = keyvalue[1].lstrip("0123456789.").to_lower()
+					
+					if value_unit != "px": printerr("WARNING! unit is not px")
+
+					match key:
+						"left": 
+							this_wrld_rect_data.x = value_num
+							this_wrld_rect_data.anchor_left = true
+						"right": 
+							this_wrld_rect_data.x = value_num
+							this_wrld_rect_data.anchor_left = false
+						"top": 
+							this_wrld_rect_data.y = value_num
+							this_wrld_rect_data.anchor_top = true
+						"bottom": 
+							this_wrld_rect_data.y = value_num
+							this_wrld_rect_data.anchor_top = false
+						"width": this_wrld_rect_data.width = value_num
+						"height": this_wrld_rect_data.height = value_num
 					
 			XMLParser.NODE_ELEMENT_END:
 				var tag_name = parser.get_node_name()
-				if tag_name != WALL_TAG_NAME || !reading_in_wall: continue
-				#print("wall end tag")
-				_place_wall(this_wall_data, replace)
-				reading_in_wall = false
+				if !reading_in_wrld_rect: continue
+				this_wrld_rect_inner_end = parser.get_node_offset()
+				this_wrld_rect_data.inner = bytes.slice(this_wrld_rect_inner_start, this_wrld_rect_inner_end).get_string_from_utf8()
+				_place_wrld_rect(current_parent, this_wrld_rect_data, replace)
+				reading_in_wrld_rect = false
 					
-func _place_wall(data :WallData, replace :bool):
-	var scene_root = get_scene()
-	var wall_name = "WALL - " + data.id + " ("+str(data.left)+", "+str(data.top)+") to ("+str(data.left+data.width)+", "+str(data.top+data.height)+")"
-	if scene_root.get_node("WALLS").has_node(wall_name) && !replace:
-		print("wall already exists")
-		return
+func _place_wrld_rect(parent :Control, data :WrldRectDat, replace :bool):
+	var wrld_rect_name = ("("+str(data.x)+", "+str(data.y)+")") if data.id == "" else data.id
+	var this_wrld_rect :WrldRect = WRLD_RECT_SCENE.instantiate()
 	
-	#print("placing wall")
+	print(data.anchor_top)
+	print(data.anchor_left)
+	match [data.anchor_top, data.anchor_left]:
+		[false, false]:
+			print("bottom right")
+			
+			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+		[false, true]:
+			print("bottom left")
+			
+			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_KEEP_SIZE)
+		[true, false]:
+			print("top right")
+			
+			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT, Control.PRESET_MODE_KEEP_SIZE)
+		[true, true]:
+			print("top left")
+			
+			this_wrld_rect.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT, Control.PRESET_MODE_KEEP_SIZE)
 	
-	var this_wall :WallObj = WALL_SCENE.instantiate()
-	this_wall.position = Vector2(data.left, data.top)
-	this_wall.size = Vector2(data.width, data.height)
-	this_wall.name = "WALL - " + data.id + " ("+str(data.left)+", "+str(data.top)+") to ("+str(data.left+data.width)+", "+str(data.top+data.height)+")"
-	if data.id != "": this_wall.id = data.id
+	if data.anchor_left:
+		this_wrld_rect.set_anchor(SIDE_LEFT, 0)
+		this_wrld_rect.set_anchor(SIDE_RIGHT, 0)
+		this_wrld_rect.set_offset(SIDE_LEFT, data.x)
+		this_wrld_rect.set_offset(SIDE_RIGHT, data.x + data.width)
+		#this_wrld_rect.get_rect().end.x = data.x + data.width
+	else:
+		this_wrld_rect.set_anchor(SIDE_LEFT, 1)
+		this_wrld_rect.set_anchor(SIDE_RIGHT, 1)
+		this_wrld_rect.set_offset(SIDE_LEFT, -data.x)
+		this_wrld_rect.set_offset(SIDE_RIGHT, -data.x - data.width)
+		#this_wrld_rect.get_rect().end.x = data.x + data.width
 	
-	scene_root.get_node("WALLS").add_child(this_wall)
-	this_wall.owner = scene_root
+	if data.anchor_top:
+		this_wrld_rect.set_anchor(SIDE_TOP, 0)
+		this_wrld_rect.set_anchor(SIDE_BOTTOM, 0)
+		this_wrld_rect.set_offset(SIDE_TOP, data.x)
+		this_wrld_rect.set_offset(SIDE_RIGHT, data.y + data.height)
+	else:
+		this_wrld_rect.set_anchor(SIDE_TOP, 0)
+		this_wrld_rect.set_anchor(SIDE_BOTTOM, 0)
+		this_wrld_rect.set_offset(SIDE_TOP, data.x)
+		this_wrld_rect.set_offset(SIDE_BOTTOM, data.y + data.height)
+	
+	#this_wrld_rect.size = Vector2(data.width, data.height)
+	this_wrld_rect.name = wrld_rect_name
+	
+	this_wrld_rect.id = data.id
+	this_wrld_rect.collision = data.collision
+	this_wrld_rect.inner = data.inner.lstrip("\n ").rstrip("\n ")
+	
+	parent.add_child(this_wrld_rect)
+	this_wrld_rect.owner = get_scene()
 
 func _clear_walls():
-	for wall in get_scene().get_node("WALLS").get_children():
+	for wall in get_scene().get_node(NW).get_children():
+		wall.queue_free()
+	for wall in get_scene().get_node(NE).get_children():
+		wall.queue_free()
+	for wall in get_scene().get_node(SW).get_children():
+		wall.queue_free()
+	for wall in get_scene().get_node(SE).get_children():
 		wall.queue_free()
