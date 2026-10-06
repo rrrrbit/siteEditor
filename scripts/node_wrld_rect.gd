@@ -1,5 +1,5 @@
 class_name WrldRect
-extends Control
+extends ColorRect
 
 @export var collision :bool
 

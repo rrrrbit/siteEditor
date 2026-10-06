@@ -27,7 +27,17 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 placeholder_text = "<div class=\"wall\"..."
+wrap_mode = 1
+autowrap_mode = 1
+indent_wrapped_lines = true
 gutters_draw_line_numbers = true
+indent_use_spaces = true
+
+[node name="wrap" type="CheckBox" parent="VBoxContainer" unique_id=773180607]
+unique_name_in_owner = true
+layout_mode = 2
+text = "wrap lines
+"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1966403980]
 layout_mode = 2

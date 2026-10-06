@@ -23,6 +23,7 @@ var btn_import :Button
 var btn_export :Button
 var check_auto :CheckBox
 var btn_clear :Button
+var wrap :CheckBox
 
 enum AutoModes {
 	OFF,
@@ -61,6 +62,7 @@ func _enter_tree() -> void:
 	btn_export = dock_get("%exp")
 	check_auto = dock_get("%auto")
 	btn_clear = dock_get("%clear")
+	wrap = dock_get("%wrap")
 	
 	btn_import.pressed.connect(_on_import_press)
 	btn_export.pressed.connect(_on_export_press)
@@ -72,6 +74,7 @@ func _enter_tree() -> void:
 			auto_mode = AutoModes.OFF
 		)
 	field_html.text_changed.connect(_on_html_change)
+	wrap.toggled.connect(_on_wrap_toggle)
 	
 	auto_mode = AutoModes.OFF
 	
@@ -122,6 +125,10 @@ func _on_export_press():
 		AutoModes.IMPORT: auto_mode = AutoModes.EXPORT
 func _on_clear_press():
 	_clear_walls()
+	
+func _on_wrap_toggle(state: bool):
+	field_html.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY if state else TextEdit.LINE_WRAPPING_NONE
+
 func _on_html_change():
 	if(auto_mode == AutoModes.IMPORT):
 		_html_to_scene(field_html.text, true)
@@ -141,8 +148,6 @@ func get_scene(): return EditorInterface.get_edited_scene_root()
 
 
 
-func _indented(str: String) -> String: return ("    "+str.replace("\n","\n    "))
-
 func _obj_to_html(obj : WrldRect, anchor_top, anchor_left) -> String:
 	const format = '<{tag_name}{id} style="{x_anchor}:{x}px; {y_anchor}:{y}px; width:{width}px; height:{height}px;">{inner}</{tag_name}>'
 	
@@ -157,15 +162,15 @@ func _obj_to_html(obj : WrldRect, anchor_top, anchor_left) -> String:
 		"y": y,
 		"width": obj.size.x,
 		"height": obj.size.y,
-		"inner": "\n"+_indented(obj.inner)+"\n" if obj.inner != "" else "",
+		"inner": "\n"+(obj.inner)+"\n" if obj.inner != "" else "",
 		})
 
 func _section_to_html(section_node :Control, anchor_top :bool, anchor_left :bool):
 	var output = '<div id="'+section_node.name+'">\n'
 	var children = section_node.get_children()
 	for child :WrldRect in children:
-		output += _indented(_obj_to_html(child, anchor_top, anchor_left))
-	output += '\n</div>\n'
+		output += _obj_to_html(child, anchor_top, anchor_left).indent("    ")+"\n"
+	output += '\n</div>\n\n'
 	return output
 
 func _scene_to_html() -> String:
@@ -297,7 +302,9 @@ func _place_wrld_rect(parent :Control, data :WrldRectDat, replace :bool):
 	
 	this_wrld_rect.id = data.id
 	this_wrld_rect.collision = data.collision
-	this_wrld_rect.inner = data.inner.lstrip("\n ").rstrip("\n ")
+	this_wrld_rect.inner = data.inner.lstrip("\n").rstrip("\n ")
+	
+	(this_wrld_rect as ColorRect).color = Color(0,0,0,0.75) if data.collision else Color(1,1,1,0.75)
 	
 	parent.add_child(this_wrld_rect)
 	this_wrld_rect.owner = get_scene()

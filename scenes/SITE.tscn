@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://da0rhcrbpp5dw"]
 
 [ext_resource type="PackedScene" uid="uid://bbhq1dreucung" path="res://prefabs/wrld_rect.tscn" id="1_3cdn4"]
-[ext_resource type="Script" uid="uid://cx1a111c6n7fy" path="res://scripts/node_wrld_rect.gd" id="2_3cdn4"]
+[ext_resource type="Script" uid="uid://cx1a111c6n7fy" path="res://scripts/node_wrld_rect.gd" id="2_y6shu"]
 
 [node name="root" type="Control" unique_id=1311082456]
 layout_mode = 3
@@ -39,10 +39,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
 
 [node name="north" type="HBoxContainer" parent="GridContainer" unique_id=1915130965]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
 [node name="NW" type="Control" parent="GridContainer/north" unique_id=990273623]
 unique_name_in_owner = true
@@ -50,7 +52,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="hi" type="ColorRect" parent="GridContainer/north/NW" unique_id=167796547 instance=ExtResource("1_3cdn4")]
+[node name="(0, 0)" type="ColorRect" parent="GridContainer/north/NW" unique_id=167796547 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
@@ -58,10 +60,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -100.0
 offset_top = -100.0
-color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_3cdn4")
+color = Color(0, 0, 0, 0.75)
+script = ExtResource("2_y6shu")
 collision = true
-id = "hi"
 
 [node name="N" type="Control" parent="GridContainer/north" unique_id=726190369]
 unique_name_in_owner = true
@@ -76,18 +77,137 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="hi" type="ColorRect" parent="GridContainer/north/NE" unique_id=1227556315 instance=ExtResource("1_3cdn4")]
+[node name="(0, 0)" type="ColorRect" parent="GridContainer/north/NE" unique_id=809332152 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -100.0
 offset_right = 100.0
-color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_3cdn4")
-id = "hi"
+color = Color(1, 1, 1, 0.75)
+script = ExtResource("2_y6shu")
+inner = "	bob's house"
+
+[node name="(0, 0)10" parent="GridContainer/north/NE" unique_id=189710444 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 280.0
+offset_top = -120.0
+offset_right = 320.0
+offset_bottom = -44.0
+grow_vertical = 0
+color = Color(1, 1, 1, 0.75)
+id = "bob"
+inner = "	.o<br>/I\\<br>/ \\<br>bob"
+
+[node name="(0, 0)2" parent="GridContainer/north/NE" unique_id=1971275648 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 160.0
+offset_top = -48.0
+offset_right = 464.0
+offset_bottom = -4.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)4" parent="GridContainer/north/NE" unique_id=2139635072 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 424.0
+offset_top = -240.0
+offset_right = 464.0
+offset_bottom = -4.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)5" parent="GridContainer/north/NE" unique_id=54827191 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 160.0
+offset_top = -240.0
+offset_right = 200.0
+offset_bottom = -96.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)3" parent="GridContainer/north/NE" unique_id=1590441632 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 96.0
+offset_top = -272.0
+offset_right = 528.0
+offset_bottom = -228.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)6" parent="GridContainer/north/NE" unique_id=312528838 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 144.0
+offset_top = -304.0
+offset_right = 480.0
+offset_bottom = -260.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)7" parent="GridContainer/north/NE" unique_id=351745035 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 192.0
+offset_top = -344.0
+offset_right = 432.0
+offset_bottom = -300.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)8" parent="GridContainer/north/NE" unique_id=1661226375 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 232.0
+offset_top = -384.0
+offset_right = 392.0
+offset_bottom = -340.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
+
+[node name="(0, 0)9" parent="GridContainer/north/NE" unique_id=611922963 instance=ExtResource("1_3cdn4")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 272.0
+offset_top = -424.0
+offset_right = 352.0
+offset_bottom = -380.0
+grow_vertical = 0
+color = Color(0, 0, 0, 0.75)
+collision = true
 
 [node name="middle" type="HBoxContainer" parent="GridContainer" unique_id=773490147]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="W" type="Control" parent="GridContainer/middle" unique_id=284962172]
 unique_name_in_owner = true
@@ -112,6 +232,7 @@ size_flags_vertical = 3
 [node name="south" type="HBoxContainer" parent="GridContainer" unique_id=1748861122]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 alignment = 1
 
 [node name="SW" type="Control" parent="GridContainer/south" unique_id=927990106]
@@ -120,16 +241,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="hi" type="ColorRect" parent="GridContainer/south/SW" unique_id=87984278 instance=ExtResource("1_3cdn4")]
+[node name="(0, 0)" type="ColorRect" parent="GridContainer/south/SW" unique_id=1077476293 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -100.0
-offset_bottom = 100.0
-color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_3cdn4")
+offset_left = -512.0
+offset_bottom = 512.0
+color = Color(0, 0, 0, 0.75)
+script = ExtResource("2_y6shu")
 collision = true
-id = "hi"
 
 [node name="S" type="Control" parent="GridContainer/south" unique_id=1352511384]
 unique_name_in_owner = true
@@ -144,11 +264,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="hi" type="ColorRect" parent="GridContainer/south/SE" unique_id=1132360549 instance=ExtResource("1_3cdn4")]
+[node name="(0, 0)" type="ColorRect" parent="GridContainer/south/SE" unique_id=2109323112 instance=ExtResource("1_3cdn4")]
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
-color = Color(0, 0, 0, 0.7529412)
-script = ExtResource("2_3cdn4")
+color = Color(0, 0, 0, 0.75)
+script = ExtResource("2_y6shu")
 collision = true
-id = "hi"
